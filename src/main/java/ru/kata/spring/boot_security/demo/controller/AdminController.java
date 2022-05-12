@@ -26,15 +26,11 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    // all users
-
     @GetMapping("users")
     public String printUsers(Model model) {
         model.addAttribute("userSet", userService.listUsers());
         return "listUser";
     }
-
-    // add
 
     @GetMapping(value = "users/add")
     public String newUserForm(@ModelAttribute("user") User user, Model model) {
@@ -49,8 +45,6 @@ public class AdminController {
         userService.addUser(user);
         return "redirect:/admin/users";
     }
-
-    // edit users
 
     @GetMapping("users/{id}/edit")
     public String editUserForm(Model model, @PathVariable("id") long id) {
@@ -67,15 +61,11 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
-    // remove users
-
     @DeleteMapping("users/{id}/delete")
     public String deleteUserById(@PathVariable("id") long id) {
         userService.removeUserById(id);
         return "redirect:/admin/users";
     }
-
-    // show user by id
 
     @GetMapping("users/{id}")
     public String show(@PathVariable("id") Long id, ModelMap modelMap) {

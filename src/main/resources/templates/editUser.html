@@ -17,23 +17,33 @@
       <legend>User data</legend>
       <p>
         <label th:for="name">Name</label>
-        <input type="text" name="name" th:id="name" th:value="${user.getName()}">
+        <label>
+          <input type="text" name="name" th:id="name" th:value="${user.getName()}">
+        </label>
       </p>
       <p>
         <label th:for="lastName">Lastname</label>
-        <input type="text" name="lastName" th:id="lastName" th:value="${user.getLastName()}"><br/>
+        <label>
+          <input type="text" name="lastName" th:id="lastName" th:value="${user.getLastName()}">
+        </label><br/>
       </p>
       <p>
         <label th:for="age">Age</label>
-        <input type="number" name="age" th:id="age" th:value="${user.getAge()}"><br/>
+        <label>
+          <input type="number" name="age" th:id="age" th:value="${user.getAge()}">
+        </label><br/>
       </p>
       <p>
         <label th:for="email">Email</label>
-        <input type="text" name="email" th:id="email" th:value="${user.getEmail()}"><br/>
+        <label>
+          <input type="text" name="email" th:id="email" th:value="${user.getEmail()}">
+        </label><br/>
       </p>
       <p>
         <label th:for="password">Password</label>
-        <input type="password" name="password" th:id="password"><br/>
+        <label>
+          <input type="password" name="password" th:id="password">
+        </label><br/>
       </p>
       <p>
         <label>

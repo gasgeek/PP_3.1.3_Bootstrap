@@ -6,34 +6,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-
 @Repository
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
-    private final EntityManager entityManager;
-
-    @Autowired
-    public UserDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    @Override
-    public User getUserByEmail(String email) {
-        return entityManager.createQuery(
-                        "SELECT user FROM User user join fetch  user.roles WHERE user.email =:email", User.class)
-                .setParameter("email", email)
-                .getSingleResult();
-    }
+    private EntityManager entityManager;
 
     @Override
     public void addUser(User user) {
         entityManager.persist(user);
-    }
-
-    @Override
-    public User getUserById(long id) {
-        return entityManager.find(User.class, id);
     }
 
     @Override
@@ -42,12 +23,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void removeUserById(long id) {
-        entityManager.remove(entityManager.find(User.class, id));
+    public void removeUser(int id) {
+        User user = entityManager.find(User.class, id);
+        entityManager.remove(user);
     }
 
     @Override
-    public List<User> listUsers() {
-        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
+    public User getUserById(int id) {
+        return entityManager.find(User.class, id);
+    }
+
+    @Override
+    public List<User> getListUsers() {
+        return entityManager.createQuery("SELECT user FROM User user", User.class).getResultList();
+    }
+
+    @Override
+    public User getUserByName(String name) {
+        return entityManager.createQuery("SELECT user FROM User user WHERE user.name =:name", User.class).setParameter("name", name).getSingleResult();
     }
 }

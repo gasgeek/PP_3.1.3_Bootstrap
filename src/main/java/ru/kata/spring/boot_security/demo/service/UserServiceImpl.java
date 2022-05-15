@@ -1,61 +1,54 @@
 package ru.kata.spring.boot_security.demo.service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
+
 import java.util.List;
 
-
 @Service
-@Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
-    BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
     private final UserDao userDao;
 
-    @Autowired
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userDao.getUserByEmail(email);
-    }
-
-    @Override
+    @Transactional
     public void addUser(User user) {
         userDao.addUser(user);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     }
 
     @Override
-    public User getUserById(long id) {
-        return userDao.getUserById(id);
-    }
-
-    @Override
+    @Transactional
     public void updateUser(User user) {
         userDao.updateUser(user);
     }
 
     @Override
-    public void removeUserById(long id) {
-        userDao.removeUserById(id);
+    @Transactional
+    public void removeUser(int id) {
+        if (userDao.getUserById(id) != null) {
+            userDao.removeUser(id);
+        }
     }
 
     @Override
-    public List<User> listUsers() {
-        return userDao.listUsers();
+    public User getUserById(int id) {
+        return userDao.getUserById(id);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userDao.getUserByEmail(email);
+    @Transactional
+    public List<User> getListUsers() {
+        return userDao.getListUsers();
+    }
+
+    @Override
+    public User getUserByName(String name) {
+        return userDao.getUserByName(name);
     }
 }

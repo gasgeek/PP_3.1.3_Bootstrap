@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create user</title>
+</head>
+<body>
+<h2>Create user</h2>
+<div>
+  <form th:action="@{/logout}" method="post">
+    <input type="submit" value="Quit">
+  </form>
+  <br>
+  <form method="POST" th:action="@{/admin/users/add}" th:object="${user}">
+    <fieldset>
+      <legend>User data</legend>
+      <label for="name">Enter name</label>
+      <input type="text" th:field="*{user.name}" id="name"/>
+      <label for="lastName">Last name</label>
+      <input type="text" th:field="*{user.lastName}" id="lastName"/>
+      <label for="age">Age</label>
+      <input type="number" th:field="*{user.age}" id="age"/>
+      <label for="email">Email</label>
+      <input type="text" th:field="*{user.email}" id="email"/>
+      <label for="password">Password</label>
+      <input type="password" th:field="*{user.password}" id="password"/>
+      <label>
+        <select size="2" multiple="multiple" name="roles" id="roles">
+          <option disabled>Roles:</option>
+          <option value="ROLE_ADMIN">ADMIN</option>
+          <option selected value="ROLE_USER">USER</option>
+        </select>
+      </label>
+    </fieldset>
+    <br/>
+    <button type="submit">Create user</button>
+  </form>
+  <br/>
+  <form th:action="@{/admin}">
+    <button type="submit" class="btn btn-outline-danger">Back to users list</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,6 +1,9 @@
 package ru.kata.spring.boot_security.demo.model;
+
 import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -8,22 +11,23 @@ public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
-    @Column(name = "name", unique = true, length = 100)
-    private String role;
+    @Column(name = "role")
+    private String name;
 
-    public Role() {}
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
-    public Role(int id) {
+    public Role() {
+    }
+
+    public Role(int id, String name) {
         this.id = id;
+        this.name = name;
     }
 
-    public Role(String role) {
-        this.role = role;
-    }
-
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -31,21 +35,34 @@ public class Role implements GrantedAuthority {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String getAuthority() {
-        return getRole();
+
+        return getName();
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
     public String toString() {
-        return role;
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", users=" + users +
+                '}';
     }
 }

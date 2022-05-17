@@ -1,24 +1,23 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.dao.UserDao;
 
-@Service
+@Service("userDetailsServiceImpl")
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserDao userDao;
 
-    public UserDetailsServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    private final UserService userService;
+
+    @Autowired
+    public UserDetailsServiceImpl(UserService userService) {
+        this.userService = userService;
     }
 
-    // «Пользователь» – это просто Object. В большинстве случаев он может быть
-    //  приведен к классу UserDetails.
-    // Для создания UserDetails используется интерфейс UserDetailsService, с единственным методом:
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        return userDao.getUserByName(name);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userService.findByEmail(email);
     }
 }

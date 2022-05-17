@@ -10,43 +10,56 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
-    private final SuccessUserHandler successUserHandler; // класс, в котором описана логика перенаправления пользователей по ролям
-
-    public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
-        this.userDetailsService = userDetailsService;
-        this.successUserHandler = successUserHandler;
-    }
+    private final SuccessUserHandler successUserHandler;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации
+    public WebSecurityConfig(SuccessUserHandler successUserHandler
+            , @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+        this.successUserHandler = successUserHandler;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()
-                .successHandler(new SuccessUserHandler())
-                .loginProcessingUrl("/login");
-
-        http.authorizeRequests()// подключаем наш SuccessHandler для перенеправления по ролям
-                .antMatchers("/login").anonymous() // доступность всем
-                .antMatchers("/").authenticated()
-                .antMatchers("/admin/**").access("hasAnyRole('ROLE_ADMIN')")
-                .and().formLogin();  // Spring сам подставит свою логин форму
-        http.csrf().disable(); //выключаем кроссдоменную секьюрность
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/admin/**")
+                .hasRole("ADMIN")
+                .antMatchers("/user/**")
+                .hasAnyRole("ADMIN", "USER")
+                .antMatchers("/login")
+                .permitAll()
+                .and()
+                .formLogin()
+                .successHandler(successUserHandler)
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
     }
 
-    // Необходимо для шифрования паролей
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder(12);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        return daoAuthenticationProvider;
+    }
+
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+        auth.authenticationProvider(daoAuthenticationProvider());
     }
 }

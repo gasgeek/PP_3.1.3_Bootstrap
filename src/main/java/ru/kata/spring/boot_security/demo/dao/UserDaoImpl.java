@@ -10,8 +10,15 @@ import java.util.List;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @PersistenceContext
     private EntityManager entityManager;
+/*
+
+    @Autowired
+    public UserDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+*/
 
     @Override
     public void updateUser(User user) {
@@ -30,10 +37,10 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User getByEmail(String email) {
-        return entityManager.createQuery(
-                        "SELECT user FROM User user WHERE user.email =:email", User.class)
+        User user = entityManager.createQuery("SELECT u FROM User u join fetch u.roles where u.email = :email", User.class)
                 .setParameter("email", email)
                 .getSingleResult();
+        return user;
     }
 
     @Override

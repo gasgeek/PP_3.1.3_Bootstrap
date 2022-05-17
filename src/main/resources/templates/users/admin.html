@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-  <!-- Скрипты -->
+  <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
           integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
           crossorigin="anonymous"></script>
@@ -20,7 +20,7 @@
   <title>Admin panel</title>
 </head>
 <body>
-<!--шапка-->
+<!--header-->
 <nav class="navbar navbar-dark bg-dark"> <!-- fixed-top-->
   <div class="navbar-header navbar-brand">
     <strong><a th:text="${user.getEmail()}"></a></strong>
@@ -37,7 +37,7 @@
   </div>
 </nav>
 <div class="row">
-  <!--Слева навигация между Admin и User-->
+  <!--Navy between Admin and User-->
   <div class="col-2">
     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
       <a class="nav-link" id="v-pills-admin-tab" data-toggle="pill" sec:authorize="hasRole('ADMIN')"
@@ -65,7 +65,7 @@
           </div>
         </nav>
         <div class="container border tab-content" id="nav-tabContent">
-          <!--Таблица-->
+          <!--Table-->
           <div class="tab-pane fade show active" id="nav-users" role="tabpanel"
                aria-labelledby="nav-users-tab">
             <br>
@@ -111,7 +111,7 @@
               </tbody>
             </table>
           </div>
-          <!--Создание пользователя-->
+          <!--Create new user -->
           <div class="tab-pane fade" id="nav-create" role="tabpanel"
                aria-labelledby="nav-create-tab">
 

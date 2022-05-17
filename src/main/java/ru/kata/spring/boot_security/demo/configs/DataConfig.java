@@ -1,3 +1,4 @@
+/*
 package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,4 +65,4 @@ public class DataConfig {
         dataSource.setPassword(env.getProperty("spring.datasource.password"));
         return dataSource;
     }
-}
+}*/
